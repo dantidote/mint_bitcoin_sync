@@ -19,7 +19,7 @@ pip install -r requirements
 6. How much is it worth? Set it to "1" (script will update it to correct value when run)
 7. Click 'Add it!' button
 
-#Usage
+# Usage
 ```
 usage: mint_bitcoin_sync.py [-h] -e EMAIL [-p PASSWORD] -l
                             BITCOIN_ACCOUNT_LABEL [-a BITCOIN_ADDRESSES or XPUBs]
@@ -44,7 +44,7 @@ optional arguments:
 Note that the first time you use this, you might be prompted by Mint.com to enter a verification code sent to your email.  This should only happen once.
 
 ```
-#Example
+# Example
 ```
 python mint_bitcoin_sync.py -e mintlogin@gmail.com -l Bitcoin -a xpubxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Mint.com password: 

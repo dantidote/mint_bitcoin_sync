@@ -1,32 +1,31 @@
-# This repository is no longer maintained.
-
-# mint-bitcoin-sync
+# mint_bitcoin_sync
 A python script that will update Mint.com with current value of Bitcoins in specified bitcoin addresses. Uses
 Blockchain.info API to get price over past 24 hours. Note that there is no public Mint.com API, so this is using
 "private" API calls that may break at any point.
 
 # Requirements
-* Python 2.7 or 3.x, requests
+* Python 3.x - https://www.python.org/
+* ChromeDriver - https://sites.google.com/a/chromium.org/chromedriver/
 <pre>
-pip install requests
+pip install -r requirements
 </pre>
 
 # Mint.com Setup
-1. On Mint.com, a new "Other" account needs to be added for Bitcoins 
-2. Select 'Money (or Debt)' radio button
-3. Pick 'Cash (Positive)' from dropdown and click 'Next' button
-4. What would you like to call it? Set it to 'Bitcoin' (or call it whatever you want)
-5. How much is it worth? Set it to '1' (script will update it to correct value when run)
-6. Is this associated with a loan, mortgage, or line of credit == No
+1. On Mint.com, a new "account" needs to be added for Bitcoins
+2. Click "Add a property"
+3. Select "Cash or Debt"
+4. Pick "Cash" from dropdown and click "Next" button
+5. What would you like to call it? Set it to "Bitcoin" (or call it whatever you want)
+6. How much is it worth? Set it to "1" (script will update it to correct value when run)
 7. Click 'Add it!' button
 
 #Usage
 ```
 usage: mint_bitcoin_sync.py [-h] -e EMAIL [-p PASSWORD] -l
-                            BITCOIN_ACCOUNT_LABEL [-a BITCOIN_ADDRESSES]
+                            BITCOIN_ACCOUNT_LABEL [-a BITCOIN_ADDRESSES or XPUBs]
                             [-f BITCOIN_ADDRESS_FILE] [--version]
 
-Update Mint.com with current value of Bitcoins in specified bitcoin addresses
+Update Mint.com with current value of Bitcoins in specified bitcoin addresses or xpub public key
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -34,34 +33,26 @@ optional arguments:
   -p PASSWORD           Mint.com Password (will prompt if not provided)
   -l BITCOIN_ACCOUNT_LABEL
                         Mint.com Bitcoin account label
-  -a BITCOIN_ADDRESSES  Bitcoin public address (specify multiple -a for more
+  -a BITCOIN_ADDRESSES  Bitcoin public address or xpub public keys (specify multiple -a for more
                         than one)
   -f BITCOIN_ADDRESS_FILE
-                        File containing Bitcoin public addresses, one
+                        File containing Bitcoin public addresses or xpub public keys, one
                         address per line. Must specify either -a or -f 
                         argument, must not specify both.
   --version             show program's version number and exit
+  
+Note that 
 
 ```
 #Example
 ```
-python mint_bitcoin_sync.py -e mintlogin@gmail.com -l Bitcoin -a xxxxxxxxxxxxxxxxxxxxx1 -a xxxxxxxxxxxxxxxxxxxxx2
-Mint.com password:
-2014-04-03 23:43:07,199 INFO   line 26   Getting current bitcoin balance from http://blockchain.info/q/addressbalance
-2014-04-03 23:43:07,211 INFO   line 171  Starting new HTTP connection (1): blockchain.info
-2014-04-03 23:43:07,664 INFO   line 41   Bitcoin address 'xxxxxxxxxxxxxxxxxxxxx1' has x.xx BTC
-2014-04-03 23:43:07,665 INFO   line 26   Getting current bitcoin balance from http://blockchain.info/q/addressbalance
-2014-04-03 23:43:07,668 INFO   line 171  Starting new HTTP connection (1): blockchain.info
-2014-04-03 23:43:08,051 INFO   line 41   Bitcoin address 'xxxxxxxxxxxxxxxxxxxxx2' has x.xx BTC
-2014-04-03 23:43:08,051 INFO   line 7    Getting current bitcoin price from http://blockchain.info/q/24hrprice
-2014-04-03 23:43:08,054 INFO   line 171  Starting new HTTP connection (1): blockchain.info
-2014-04-03 23:43:08,246 INFO   line 20   Using retrieved BTC price: $xxx.xx
-2014-04-03 23:43:08,247 INFO   line 44   Current combined balance for all addresses: $x.xx
+python mint_bitcoin_sync.py -e mintlogin@gmail.com -l Bitcoin -a xpubxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Mint.com password: 
+2017-12-10 19:04:36,851 INFO   line 29   Getting current bitcoin balance from https://blockchain.info/address/xpubxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?format=json
+2017-12-10 19:04:37,352 INFO   line 45   Bitcoin address "xpubxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" has x.xxxxxxxx BTC
+2017-12-10 19:04:37,353 INFO   line 9    Getting current bitcoin price from http://blockchain.info/q/24hrprice
+2017-12-10 19:04:37,392 INFO   line 23   Using retrieved BTC price: $xxxx.xx
+2017-12-10 19:04:37,393 INFO   line 59   Current combined balance for all addresses: $x,xxx.xx
 
-2014-04-03 23:43:08,248 INFO   line 22   Logging into Mint.com
-2014-04-03 23:43:08,250 INFO   line 635  Starting new HTTPS connection (1): wwws.mint.com
-2014-04-03 23:43:09,626 INFO   line 57   Getting list of accounts
-2014-04-03 23:43:09,887 INFO   line 107  Updated account on Mint with current balance: $x.xx
-2014-04-03 23:43:09,888 INFO   line 46   Logging out of Mint.com
-2014-04-03 23:43:09,940 INFO   line 64   Finished
+2017-12-10 19:05:25,497 INFO   line 71   Finished
 ```

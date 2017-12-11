@@ -41,7 +41,7 @@ optional arguments:
                         argument, must not specify both.
   --version             show program's version number and exit
   
-Note that 
+Note that the first time you use this, you might be prompted by Mint.com to enter a verification code sent to your email.  This should only happen once.
 
 ```
 #Example

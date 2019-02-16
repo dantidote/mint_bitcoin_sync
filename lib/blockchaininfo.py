@@ -4,9 +4,9 @@ from lxml import html
 import requests
 
 
-def get_bitcoin_current_price_usd():
-    price_url = 'http://blockchain.info/q/24hrprice'
-    logging.info('Getting current bitcoin price from %s', price_url)
+def get_current_price_usd(coin):
+    price_url = 'https://api.coinmarketcap.com/v1/ticker/%s/' % coin
+    logging.info('Getting current %s price from %s', coin, price_url)
 
     price_request = requests.get(price_url)
     if price_request.status_code != 200:
@@ -14,13 +14,12 @@ def get_bitcoin_current_price_usd():
             'Failed to get price from URL "{}". Error: {}'.format(price_url, price_request.text))
     if not price_request.text:
         raise Exception('No price could be retrieved from URL "{}"'.format(price_url))
-
     try:
-        current_price = float(price_request.text)
+        current_price = price_request.json()[0]['price_usd']
     except:
-        raise Exception('Failed to convert price "{}" to float'.format(price_request.text))
+        raise Exception('No balance could be retrieved from URL "%s"', price_url)
 
-    logging.info('Using retrieved BTC price: ${:.2f}'.format(current_price))
+    logging.info('Using retrieved BTC price: %s'.format(current_price))
     return current_price
 
 

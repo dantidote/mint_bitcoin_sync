@@ -9,6 +9,12 @@ from lib.mint import Mint
 
 
 def main():
+
+    try:
+        import keyring
+    except ImportError:
+        keyring = None
+
     # Create argument parser
     parser = argparse.ArgumentParser(
         description='Update Mint.com with current value of Bitcoins in specified bitcoin addresses'
@@ -23,18 +29,33 @@ def main():
     parser.add_argument(
         '-c', action='store', dest='config_file',
         help='config file')
+    parser.add_argument('--keyring', action='store_true', dest='keyring',
+      help='Use OS keyring for storing password information')
 
     parser.add_argument('--version', action='version', version='%(prog)s 1.4')
 
     args = parser.parse_args()
 
+    if args.keyring and not keyring:
+        cmdline.error('--keyring can only be used if the `keyring` '
+            'library is installed.')
+
     # Setup logging
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(levelname)-6s line %(lineno)-4s %(message)s')
 
+    if keyring and not args.password:
+        # If the keyring module is installed and we don't yet have
+        # a password, try prompting for it
+        args.password = keyring.get_password('mintapi', args.email)
+
     # Get password if not provided
     if not args.password:
         args.password = getpass.getpass('Mint.com password: ')
+
+    if args.keyring:
+        # If keyring option is specified, save the password in the keyring
+        keyring.set_password('mintapi', args.email, args.password)
 
 
     with open(args.config_file) as f:

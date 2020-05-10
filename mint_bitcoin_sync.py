@@ -26,6 +26,8 @@ def main():
                         help='Mint.com Password (will prompt if not provided)')
     parser.add_argument('-l', action='store', dest='bitcoin_account_label',
                         help='Mint.com Bitcoin account label', required=True)
+    parser.add_argument('-k', action='store', dest='apikey',
+                        help='coinmarketcap api key', required=True)
     parser.add_argument(
         '-c', action='store', dest='config_file',
         help='config file')
@@ -63,7 +65,7 @@ def main():
 
     total_usd=0
     for k,v in config.items():
-      current_price = float(get_current_price_usd(k))
+      current_price = float(get_current_price_usd(k,args.apikey))
       amount_usd = current_price * float(v)
       logging.info('%s: %f * %f = %f', k, v, current_price, amount_usd)
       total_usd += amount_usd

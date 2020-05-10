@@ -2,26 +2,30 @@ import json
 import logging
 from lxml import html
 import requests
+from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 
-
-def get_current_price_usd(coin):
-    price_url = 'https://api.coinmarketcap.com/v1/ticker/%s/' % coin
+def get_current_price_usd(coin,apikey):
+    price_url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
     logging.info('Getting current %s price from %s', coin, price_url)
 
-    price_request = requests.get(price_url)
-    if price_request.status_code != 200:
-        raise Exception(
-            'Failed to get price from URL "{}". Error: {}'.format(price_url, price_request.text))
-    if not price_request.text:
-        raise Exception('No price could be retrieved from URL "{}"'.format(price_url))
+    parameters = {
+      'convert':'USD',
+      'symbol': coin
+    }
+    headers = {
+      'Accepts': 'application/json',
+      'X-CMC_PRO_API_KEY': apikey
+    }
+
+    session = requests.Session()
+    session.headers.update(headers)
+
     try:
-        current_price = price_request.json()[0]['price_usd']
-    except:
-        raise Exception('No balance could be retrieved from URL "%s"', price_url)
-
-    logging.info('Using retrieved BTC price: %s'.format(current_price))
-    return current_price
-
+      response = session.get(price_url, params=parameters)
+      data = json.loads(response.text)
+      return  data["data"][coin.upper()]["quote"]["USD"]["price"]
+    except (ConnectionError, Timeout, TooManyRedirects) as e:
+      print (e)
 
 def get_current_address_balance(public_address):
     balance_url = 'https://blockchain.info/address/{}?format=json'.format(public_address)

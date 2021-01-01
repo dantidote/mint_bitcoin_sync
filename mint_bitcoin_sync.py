@@ -76,7 +76,7 @@ def main():
     logging.info('Current combined balance for all addresses: %s\n', total_usd_string)
 
     # Initialize mint object
-    mint = Mint(args.email, args.password, headless=True)
+    mint = Mint(args.email, args.password, headless=True, use_chromedriver_on_path=True)
 
     # Get all accounts
     mint_accounts = mint.get_accounts()
@@ -88,7 +88,9 @@ def main():
         account for account in mint_accounts if account['accountName'] == args.bitcoin_account_label
     ][0]
     mint.set_property_account_value(bitcoin_account, total_usd)
-
+    
+    mint.close()
+    
     logging.info('Finished')
 
 
